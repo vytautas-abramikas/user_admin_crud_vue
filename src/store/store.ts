@@ -24,6 +24,7 @@ export const useUserStore = defineStore("userStore", {
     },
     async createUser(user: TUser) {
       try {
+        console.log(user);
         const response = await axios.post("http://localhost:3002/users", user);
         this.users = [...this.users, response.data];
         this.setModalVisibility("add", false);
@@ -54,8 +55,9 @@ export const useUserStore = defineStore("userStore", {
         console.error("Error removing user:", error);
       }
     },
-    setFilterTerm(term: string) {
-      this.filterTerm = term;
+    setFilterTerm(e: KeyboardEvent) {
+      const target = e.target as HTMLInputElement;
+      this.filterTerm = target.value;
     },
     setUserModalMode(mode: "add" | "edit") {
       this.userModalMode = mode;
@@ -81,12 +83,19 @@ export const useUserStore = defineStore("userStore", {
   },
   getters: {
     filteredUsers: (state) => {
-      return state.users.filter(
-        (user) =>
-          user.name.includes(state.filterTerm) ||
-          user.username.includes(state.filterTerm) ||
-          user.email.includes(state.filterTerm)
-      );
+      const filterTerm = state.filterTerm.toLowerCase();
+
+      if (filterTerm === "") {
+        return state.users;
+      } else {
+        return state.users.filter(
+          (user) =>
+            user.name.toLowerCase().includes(filterTerm) ||
+            user.username.toLowerCase().includes(filterTerm) ||
+            user.email.toLowerCase().includes(filterTerm) ||
+            user.role.toLowerCase().includes(filterTerm)
+        );
+      }
     },
   },
 });
