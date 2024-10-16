@@ -49,7 +49,6 @@ const validate = (): boolean => {
 };
 
 const handleSubmit = (e: Event) => {
-  console.log(e);
   e.preventDefault();
   if (validate()) {
     if (userModalMode.value === "add") {

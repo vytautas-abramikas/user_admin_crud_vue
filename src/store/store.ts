@@ -24,7 +24,6 @@ export const useUserStore = defineStore("userStore", {
     },
     async createUser(user: TUser) {
       try {
-        console.log(user);
         const response = await axios.post("http://localhost:3002/users", user);
         this.users = [...this.users, response.data];
         this.setModalVisibility("add", false);
