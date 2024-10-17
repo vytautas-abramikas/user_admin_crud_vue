@@ -23,8 +23,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gradient-to-r from-blue-100 to-purple-100 min-h-screen p-6">
-    <div class="container mx-auto bg-white shadow-lg rounded-lg p-6">
+  <div
+    class="lg:bg-gradient-to-r from-blue-100 to-purple-100 lg:min-h-screen lg:p-6"
+  >
+    <div
+      class="lg:container lg:mx-auto bg-white lg:shadow-lg lg:rounded-lg p-6"
+    >
       <UsersHeader />
       <UsersTable />
       <UserModal v-if="isVisibleAddUserModal" />
