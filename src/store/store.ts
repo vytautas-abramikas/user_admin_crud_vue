@@ -54,9 +54,8 @@ export const useUserStore = defineStore("userStore", {
         console.error("Error removing user:", error);
       }
     },
-    setFilterTerm(e: KeyboardEvent) {
-      const target = e.target as HTMLInputElement;
-      this.filterTerm = target.value;
+    setFilterTerm(input: string) {
+      this.filterTerm = input;
     },
     setUserModalMode(mode: "add" | "edit") {
       this.userModalMode = mode;

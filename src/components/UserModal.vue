@@ -3,6 +3,7 @@ import { ref, Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../store/store";
 import { TUser } from "../types/TUser";
+import { sanitize } from "../lib/sanitize";
 
 const userStore = useUserStore();
 
@@ -48,6 +49,17 @@ const validate = (): boolean => {
   return !Object.values(newErrors).some((error) => error);
 };
 
+const handleInput = (field: keyof TUser, e: Event) => {
+  const target = e.target as HTMLInputElement | HTMLSelectElement;
+  const value = target.value || "";
+  const sanitizedValue = sanitize(value);
+  if (field === "username" || field === "name" || field === "email") {
+    userState.value[field] = sanitizedValue as string;
+  } else {
+    userState.value[field] = sanitizedValue as "User" | "Administrator";
+  }
+};
+
 const handleSubmit = (e: Event) => {
   e.preventDefault();
   if (validate()) {
@@ -87,6 +99,7 @@ const handleSubmit = (e: Event) => {
                 errors.username ? 'border-red-500' : 'border-gray-300'
               } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300`"
               placeholder="Enter username"
+              @input="(e) => handleInput('username', e)"
             />
             <div
               v-if="errors.username"
@@ -112,6 +125,7 @@ const handleSubmit = (e: Event) => {
                 errors.name ? 'border-red-500' : 'border-gray-300'
               } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300`"
               placeholder="Enter name"
+              @input="(e) => handleInput('name', e)"
             />
             <div
               v-if="errors.name"
@@ -137,6 +151,7 @@ const handleSubmit = (e: Event) => {
                 errors.email ? 'border-red-500' : 'border-gray-300'
               } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300`"
               placeholder="Enter email"
+              @input="(e) => handleInput('email', e)"
             />
 
             <div
@@ -157,6 +172,7 @@ const handleSubmit = (e: Event) => {
           <select
             id="select_role"
             v-model="userState.role"
+            @change="(e) => handleInput('role', e)"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
           >
             <option value="User">User</option>

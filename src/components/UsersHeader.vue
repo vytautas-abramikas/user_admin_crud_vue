@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { useUserStore } from "../store/store";
+import { sanitize } from "../lib/sanitize";
 
 const userStore = useUserStore();
-
 const { setFilterTerm, setUserModalMode, setModalVisibility } = userStore;
 
-const showAdduserModal = () => {
+const showAddUserModal = () => {
   setUserModalMode("add");
   setModalVisibility("add", true);
+};
+
+const handleInput = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const sanitizedValue = sanitize(target.value);
+  target.value = sanitizedValue;
+  setFilterTerm(sanitizedValue);
 };
 </script>
 
@@ -18,7 +25,7 @@ const showAdduserModal = () => {
   <div class="flex justify-between items-center mb-6">
     <button
       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300"
-      @click="showAdduserModal"
+      @click="showAddUserModal"
     >
       Add User
     </button>
@@ -27,7 +34,7 @@ const showAdduserModal = () => {
       id="searchInput"
       class="border border-gray-300 rounded-lg px-4 py-2 w-1/3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
       placeholder="Filter users..."
-      @keyup="setFilterTerm"
+      @input="handleInput"
     />
   </div>
 </template>
